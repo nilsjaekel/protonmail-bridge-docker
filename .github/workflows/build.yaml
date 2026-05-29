@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 env:
-  GHCR_REPO: nilsjaekel/protonmail-bridge-docker
+  GHCR_REPO: ghcr.io/nilsjaekel/protonmail-bridge-docker
   PLATFORMS: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/riscv64
 
 jobs:
@@ -95,6 +95,8 @@ jobs:
 
   merge:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     needs:
       - build
     steps:
