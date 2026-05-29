@@ -105,6 +105,9 @@ jobs:
           pattern: digests-*
           merge-multiple: true
 
+      - name: Checkout
+        uses: actions/checkout@master
+
       - name: Set version
         id: version
         run: echo "version=`cat VERSION`" >> $GITHUB_ENV
