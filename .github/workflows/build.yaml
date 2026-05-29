@@ -12,6 +12,11 @@ on:
       - build/*
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
 env:
   GHCR_REPO: ghcr.io/nilsjaekel/protonmail-bridge-docker
   PLATFORMS: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/riscv64
@@ -67,7 +72,7 @@ jobs:
         with:
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=false
+          outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
           context: ./build
           file: ./build/Dockerfile
           tags: |
@@ -82,6 +87,10 @@ jobs:
           mkdir -p ${{ runner.temp }}/digests
           digest="${{ steps.build.outputs.digest }}"
           touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Verify digest was pushed
+        run: |
+          docker buildx imagetools inspect ${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }}
 
       - name: Upload digest
         uses: actions/upload-artifact@v7.0.1
