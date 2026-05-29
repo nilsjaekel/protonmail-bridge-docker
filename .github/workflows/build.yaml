@@ -67,12 +67,11 @@ jobs:
         with:
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
+          outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=false
           context: ./build
           file: ./build/Dockerfile
           tags: |
-            "${{ env.GHCR_REPO }}:build"
-            "${{ env.GHCR_REPO }}:${{ env.version }}-build"
+            ${{ env.GHCR_REPO }}
           provenance: false
           sbom: false
           build-args: |
